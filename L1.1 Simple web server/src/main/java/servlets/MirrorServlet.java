@@ -14,7 +14,7 @@ public class MirrorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = createPageVariables(request);
-        pageVariables.put("message", request.getParameterMap().get("key")[0]);
+        pageVariables.put("message", request.getParameter("key"));
 
         response.getWriter().println(PageGenerator.instance().getPage("mirror.html", pageVariables));
         response.setContentType("text/html;charset=utf-8");
