@@ -1,19 +1,22 @@
 package servlets;
 
 import accounts.AccountService;
+import accounts.UserProfile;
+import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author v.chibrikov
- *         <p>
- *         Пример кода для курса на https://stepic.org/
- *         <p>
- *         Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
+ * <p>
+ * Пример кода для курса на https://stepic.org/
+ * <p>
+ * Описание курса и лицензия: https://github.com/vitaly-chibrikov/stepic_java_webserver
  */
 public class UsersServlet extends HttpServlet {
     @SuppressWarnings({"FieldCanBeLocal", "UnusedDeclaration"}) //todo: remove after module 2 home work
@@ -26,7 +29,13 @@ public class UsersServlet extends HttpServlet {
     //get public user profile
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        //todo: module 2 home work
+        Map<String, UserProfile> userList = accountService.getAllUsers();
+        Gson gson = new Gson();
+        String json = gson.toJson(userList);
+        response.setContentType("text/html;charset=utf-8");
+        response.getWriter().println(json);
+        response.setStatus(HttpServletResponse.SC_OK);
+
     }
 
     //sign up

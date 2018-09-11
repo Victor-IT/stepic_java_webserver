@@ -38,4 +38,8 @@ public class AccountService {
     public void deleteSession(String sessionId) {
         sessionIdToProfile.remove(sessionId);
     }
+
+    public Map<String, UserProfile> getAllUsers() {
+        return loginToProfile;
+    }
 }
