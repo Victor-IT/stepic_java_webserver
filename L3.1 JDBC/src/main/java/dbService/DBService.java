@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
+
 /**
  * @author v.chibrikov
  *         <p>
@@ -24,20 +26,33 @@ public class DBService {
 
     public UsersDataSet getUser(long id) throws DBException {
         try {
-            return (new UsersDAO(connection).get(id));
+            return (new UsersDAO(connection).getUserById(id));
         } catch (SQLException e) {
             throw new DBException(e);
         }
     }
 
-    public long addUser(String name) throws DBException {
+    public UsersDataSet getUser(String login) throws DBException {
+        try {
+            return (new UsersDAO(connection).getUserByLogin(login));
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+
+    public Map<String, UsersDataSet> getAllUsers() throws SQLException {
+        UsersDAO dao = new UsersDAO(connection);
+        return dao.getAllUsers();
+    }
+
+    public UsersDataSet addUser(UsersDataSet usersDataSet) throws DBException {
         try {
             connection.setAutoCommit(false);
             UsersDAO dao = new UsersDAO(connection);
             dao.createTable();
-            dao.insertUser(name);
+            dao.insertUser(usersDataSet);
             connection.commit();
-            return dao.getUserId(name);
+            return dao.getUserByLogin(usersDataSet.getLogin());
         } catch (SQLException e) {
             try {
                 connection.rollback();
@@ -50,6 +65,10 @@ public class DBService {
             } catch (SQLException ignore) {
             }
         }
+    }
+
+    public void deleteUser(String login) throws SQLException {
+        new UsersDAO(connection).deleteUser(login);
     }
 
     public void cleanUp() throws DBException {
@@ -97,7 +116,7 @@ public class DBService {
         return null;
     }
 
-    public static Connection getH2Connection() {
+    private static Connection getH2Connection() {
         try {
             String url = "jdbc:h2:./h2db";
             String name = "test";

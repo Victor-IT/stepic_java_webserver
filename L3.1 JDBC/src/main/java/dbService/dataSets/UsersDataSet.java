@@ -10,26 +10,38 @@ package dbService.dataSets;
 @SuppressWarnings("UnusedDeclaration")
 public class UsersDataSet {
     private long id;
-    private String name;
+    private String login;
+    private String password;
 
-    public UsersDataSet(long id, String name) {
+    public UsersDataSet(long id, String login, String password) {
         this.id = id;
-        this.name = name;
+        this.login = login;
+        this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public UsersDataSet(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public long getId() {
         return id;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String toString() {
         return "UsersDataSet{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + login + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

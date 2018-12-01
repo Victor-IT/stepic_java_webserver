@@ -1,45 +1,36 @@
 package accounts;
 
-
+import dbService.DBException;
 import dbService.DBService;
+import dbService.dataSets.UsersDataSet;
 
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.Map;
 
 public class AccountService {
-    private final Map<String, UserProfile> loginToProfile;
-    private final Map<String, UserProfile> sessionIdToProfile;
+    private final DBService dbService;
 
-    public AccountService() {
-        loginToProfile = new HashMap<>();
-        sessionIdToProfile = new HashMap<>();
+    public AccountService(DBService dbService) {
+        this.dbService = dbService;
     }
 
-    public void addNewUser(UserProfile userProfile) {
-        loginToProfile.put(userProfile.getLogin(), userProfile);
+    public void addNewUser(UsersDataSet usersDataSet) throws DBException {
+        System.out.println(dbService.addUser(usersDataSet));
     }
 
-    public void deleteUser(String login) {
-        loginToProfile.remove(login);
+    public UsersDataSet getUserById(long id) throws DBException {
+        return dbService.getUser(id);
     }
 
-    public UserProfile getUserByLogin(String login) {
-        return loginToProfile.get(login);
+    public UsersDataSet getUserByLogin(String login) throws DBException {
+        return dbService.getUser(login);
     }
 
-    public UserProfile getUserBySessionId(String sessionId) {
-        return sessionIdToProfile.get(sessionId);
+    public void deleteUser(String login) throws SQLException {
+        dbService.deleteUser(login);
     }
 
-    public void addSession(String sessionId, UserProfile userProfile) {
-        sessionIdToProfile.put(sessionId, userProfile);
-    }
-
-    public void deleteSession(String sessionId) {
-        sessionIdToProfile.remove(sessionId);
-    }
-
-    public Map<String, UserProfile> getAllUsers() {
-        return loginToProfile;
+    public Map<String, UsersDataSet> getAllUsers() throws SQLException {
+        return dbService.getAllUsers();
     }
 }

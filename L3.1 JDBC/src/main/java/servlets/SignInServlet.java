@@ -1,7 +1,8 @@
 package servlets;
 
 import accounts.AccountService;
-import accounts.UserProfile;
+import dbService.DBException;
+import dbService.dataSets.UsersDataSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +23,17 @@ public class SignInServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String login = request.getParameter("login");
-        String pass = request.getParameter("password");
-        UserProfile userProfile = accountService.getUserByLogin(login);
+        String password = request.getParameter("password");
+        UsersDataSet usersDataSet = null;
+        try {
+            usersDataSet = accountService.getUserByLogin(login);
+        } catch (DBException e) {
+            e.printStackTrace();
+        }
         response.setContentType("text/html;charset=utf-8");
 
-        if (userProfile != null && userProfile.getPass().equals(pass)) {
-            response.getWriter().println("Authorized: " + userProfile.getLogin());
+        if (usersDataSet != null && usersDataSet.getPassword().equals(password)) {
+            response.getWriter().println("Authorized: " + usersDataSet.getLogin());
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.getWriter().println("Unauthorized");

@@ -1,9 +1,9 @@
 package servlets;
 
 import accounts.AccountService;
-import accounts.UserProfile;
+import dbService.DBException;
+import dbService.dataSets.UsersDataSet;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,18 +21,28 @@ public class SignUpServlet extends HttpServlet {
 
     // sign up
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String login = request.getParameter("login");
-        UserProfile userProfile = accountService.getUserByLogin(login);
+        String password = request.getParameter("password");
+        UsersDataSet usersDataSet = null;
+        try {
+            usersDataSet = accountService.getUserByLogin(login);
+        } catch (DBException e) {
+            e.printStackTrace();
+        }
 
-        if (userProfile != null) {
-            response.setContentType("txt/html;charset=utf-8");
+        response.setContentType("txt/html;charset=utf-8");
+        if (usersDataSet != null || password == null) {
             response.getWriter().println("Username already exist");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else {
-            userProfile = new UserProfile(login, request.getParameter("pass"));
-            accountService.addNewUser(userProfile);
-            response.setContentType("txt/html;charset=utf-8");
+            usersDataSet = new UsersDataSet(login, password);
+            try {
+                accountService.addNewUser(usersDataSet);
+            } catch (DBException e) {
+                e.printStackTrace();
+            }
+            response.getWriter().println("User added: " + login);
             response.setStatus(HttpServletResponse.SC_OK);
         }
     }
