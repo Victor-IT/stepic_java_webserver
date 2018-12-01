@@ -100,8 +100,8 @@ public class DBService {
     public static Connection getH2Connection() {
         try {
             String url = "jdbc:h2:./h2db";
-            String name = "tully";
-            String pass = "tully";
+            String name = "test";
+            String pass = "test";
 
             JdbcDataSource ds = new JdbcDataSource();
             ds.setURL(url);
