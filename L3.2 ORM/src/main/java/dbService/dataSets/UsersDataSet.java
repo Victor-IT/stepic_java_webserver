@@ -23,6 +23,9 @@ public class UsersDataSet implements Serializable { // Serializable Important to
     @Column(name = "name", unique = true, updatable = false)
     private String name;
 
+    @Column (name = "password", unique = false, updatable = true)
+    private String password;
+
     //Important to Hibernate!
     @SuppressWarnings("UnusedDeclaration")
     public UsersDataSet() {
@@ -56,11 +59,20 @@ public class UsersDataSet implements Serializable { // Serializable Important to
         this.id = id;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
-        return "UserDataSet{" +
+        return "UsersDataSet{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }
