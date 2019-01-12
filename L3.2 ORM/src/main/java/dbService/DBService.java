@@ -13,6 +13,9 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author v.chibrikov
@@ -23,7 +26,7 @@ import java.sql.SQLException;
  */
 public class DBService {
     private static final String hibernate_show_sql = "true";
-    private static final String hibernate_hbm2ddl_auto = "create";
+    private static final String hibernate_hbm2ddl_auto = "update";
 
     private final SessionFactory sessionFactory;
 
@@ -69,6 +72,30 @@ public class DBService {
             UsersDataSet dataSet = dao.get(id);
             session.close();
             return dataSet;
+        } catch (HibernateException e) {
+            throw new DBException(e);
+        }
+    }
+
+    public UsersDataSet getUser(String login) throws DBException {
+        try {
+            Session session = sessionFactory.openSession();
+            UsersDAO dao = new UsersDAO(session);
+            UsersDataSet dataSet = dao.get(login);
+            session.close();
+            return dataSet;
+        } catch (HibernateException e) {
+            throw new DBException(e);
+        }
+    }
+
+    public List<UsersDataSet> getAll() throws DBException {
+        try {
+            Session session = sessionFactory.openSession();
+            UsersDAO dao = new UsersDAO(session);
+            List<UsersDataSet> users = dao.getAll();
+            session.close();
+            return users;
         } catch (HibernateException e) {
             throw new DBException(e);
         }

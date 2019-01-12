@@ -4,6 +4,8 @@ import dbService.DBException;
 import dbService.DBService;
 import dbService.dataSets.UsersDataSet;
 
+import java.util.List;
+
 public class AccountService {
     private final DBService dbService;
 
@@ -11,7 +13,15 @@ public class AccountService {
         this.dbService = dbService;
     }
 
-    public void addNewUser(UsersDataSet dataSet) throws DBException {
-        System.out.println(dbService.addUser(dataSet));
+    public Long addNewUser(UsersDataSet dataSet) throws DBException {
+        return dbService.addUser(dataSet);
+    }
+
+    public List<UsersDataSet> getAll() throws DBException {
+        return dbService.getAll();
+    }
+
+    public UsersDataSet getUser(String login) throws DBException {
+        return dbService.getUser(login);
     }
 }
